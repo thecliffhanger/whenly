@@ -1,0 +1,2 @@
+[console_scripts]
+whenly = whenly.cli:main
