@@ -90,9 +90,11 @@ class JobRunner:
             self._futures.pop(run.id, None)
 
     def shutdown(self, wait: bool = True) -> None:
-        if self._executor is not None:
-            self._executor.shutdown(wait=wait)
+        with self._lock:
+            executor = self._executor
             self._executor = None
+        if executor is not None:
+            executor.shutdown(wait=wait)
         with self._lock:
             self._futures.clear()
 

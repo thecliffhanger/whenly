@@ -32,8 +32,24 @@ class Scheduler:
         self._tick_interval = tick_interval
         self._thread: threading.Thread | None = None
         self._running = False
+        self._stopped = False
         self._lock = threading.Lock()
         self._funcs: dict[str, Callable[..., Any]] = {}
+
+    def __enter__(self) -> Scheduler:
+        return self
+
+    def __exit__(self, *args: Any) -> None:
+        self.close()
+
+    def close(self) -> None:
+        """Stop the scheduler and close the store safely."""
+        if self._stopped:
+            return
+        self.stop()
+        with self._lock:
+            self._stopped = True
+        self._store.close()
 
     # -- decorators --
 
@@ -233,12 +249,14 @@ class Scheduler:
             logger.info("Scheduler started (background)")
 
     def stop(self) -> None:
-        """Stop the scheduler."""
+        """Stop the scheduler (idempotent)."""
         with self._lock:
+            was_running = self._running
             self._running = False
-        if self._thread:
-            self._thread.join(timeout=5)
+            thread = self._thread
             self._thread = None
+        if was_running and thread:
+            thread.join(timeout=5)
         self._runner.shutdown(wait=True)
         logger.info("Scheduler stopped")
 
