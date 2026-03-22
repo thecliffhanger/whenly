@@ -1,5 +1,9 @@
 # whenly
 
+[![PyPI version](https://badge.fury.io/py/whenly.svg)](https://pypi.org/project/whenly)
+[![Python versions](https://img.shields.io/pypi/pyversions/whenly.svg)](https://pypi.org/project/whenly)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Lightweight persistent job scheduler for Python — SQLite-backed, minimal dependencies.
 
 ```python
@@ -81,3 +85,7 @@ whenly run
 ## License
 
 MIT
+
+---
+
+Part of the [thecliffhanger](https://github.com/thecliffhanger) open source suite.
