@@ -11,7 +11,7 @@ from whenly import Scheduler
 
 s = Scheduler()
 
-@s.every(5, minutes)
+@s.every(5, "minutes")
 def sync_data():
     ...
 
@@ -47,7 +47,7 @@ from whenly import Scheduler
 s = Scheduler()
 
 # Interval jobs
-@s.every(30, seconds)
+@s.every(30, "seconds")
 def poll_api():
     print("Polling...")
 
@@ -57,7 +57,12 @@ def cleanup():
     print("Running cleanup...")
 
 # One-off delayed job
-s.later(10, minutes, send_notification, msg="Hello")
+@s.later(10, "minutes")
+def send_notification():
+    print("Hello!")
+
+# Or pass a function directly
+s.later(30, "seconds", func=poll_api)
 
 # Start the scheduler (non-blocking)
 s.start()
@@ -69,10 +74,12 @@ s.start()
 ### Programmatic API
 
 ```python
-s.add_job("poll", interval=60, unit="seconds", fn=poll_api)
-s.add_job("cleanup", cron="0 3 * * *", fn=cleanup)
-s.remove_job("poll")
-s.list_jobs()
+s.add(poll_api, every="60s")
+s.add(cleanup, cron="0 3 * * *")
+s.disable("poll")
+s.enable("poll")
+s.run_now("poll_api")
+print(s.jobs)
 ```
 
 ## CLI
