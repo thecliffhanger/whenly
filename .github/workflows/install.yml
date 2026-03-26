@@ -16,4 +16,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --no-cache-dir whenly unbreak structmatch configly-lib typely batchly snaplog guardly fluxrate
-      - run: python -c "import whenly, unbreak, structmatch, configly, typely, batchly, snaplog, guardly, fluxrate; print('OK')"
+      - run: |
+          import whenly
+          import unbreak
+          import structmatch
+          import configly
+          import typely
+          import batchly
+          import snaplog
+          import guardly
+          import fluxrate
+          print("All 9 packages imported successfully")
